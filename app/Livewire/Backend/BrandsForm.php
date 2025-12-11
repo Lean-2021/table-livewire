@@ -12,6 +12,7 @@ class BrandsForm extends Component
 
     public $name;
     public $image, $id_marca;
+    public $images = [];
 
     #[Layout("layouts.dashboard")]
     public function render()
@@ -51,5 +52,11 @@ class BrandsForm extends Component
         $this->dispatch('flash-message', message: "Marca guardada con éxito");
 
         return $this->redirectRoute('brands', navigate: true);
+    }
+
+    public function deletedImagePreview($index)
+    {
+        unset($this->images[$index]); // Eliminar la imagen en el indice indicado
+        $this->images = array_values($this->images); // reacomoda el array para que no quede con indices vacios
     }
 }

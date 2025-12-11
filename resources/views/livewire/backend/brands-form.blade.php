@@ -31,41 +31,46 @@
                         <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                             for="small_size">Imagen</label>
 
-                        <div x-data="{ photoName: null, photoPreview: null }" class="col-span-6 sm:col-span-4">
-                            <!-- Profile Photo File Input -->
-                            <input type="file" id="image" class="hidden" wire:model.live="image" x-ref="image"
-                                x-on:change="
-                                                photoName = $refs.image.files[0].name;
-                                                const reader = new FileReader();
-                                                reader.onload = (e) => {
-                                                    photoPreview = e.target.result;
-                                                };
-                                                reader.readAsDataURL($refs.image.files[0]);
-                                        " />
+                        <!-- Profile Photo File Input -->
+                        <input type="file" id="images" class="hidden" wire:model="images" multiple />
+                        <x-secondary-button class="mt-2 me-2 bg-slate-800" type="button"
+                            onclick="document.getElementById('images').click()">
+                            {{ __('Seleccionar Imagenes') }}
+                        </x-secondary-button>
 
-                            <!-- New Profile Photo Preview -->
-                            <div class="mt-2" x-show="photoPreview" style="display: none;">
-                                <span class="block rounded-lg w-20 h-20 bg-cover bg-no-repeat bg-center"
-                                    x-bind:style="'background-image: url(\'' + photoPreview + '\');'">
-                                </span>
-                            </div>
 
-                            <x-secondary-button class="mt-2 me-2" type="button"
-                                x-on:click.prevent="$refs.image.click()">
-                                {{ __('Seleccionar Imagen') }}
-                            </x-secondary-button>
-
-                            <x-input-error for="image" class="mt-2" />
-                        </div>
-                        @error('image')
+                        <x-input-error for="images" class="mt-2" />
+                        @error('images')
                             <span class="text-red-500 text-sm">{{ $message }}</span>
                         @enderror
                     </div>
+
                 </div>
                 <button wire:click="save"
                     class="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
                     Guardar
                 </button>
+                <!-- Vista previa de imagenes-->
+                @if (count($images) > 0)
+                    <div class="flex gap-x-5 mt-14">
+                        @foreach ($images as $index => $image)
+                            <div class="mt-2 relative">
+                                <img src="{{ $image->temporaryURL() }}"
+                                    class="rounded-lg w-20 h-20 object-cover bg-no-repeat bg-center shadow-sm shadow-slate-300" />
+                                <button class="absolute -top-2 -left-2 bg-red-600 rounded-md"
+                                    wire:click.prevent="deletedImagePreview({{ $index }})">
+                                    <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                                        viewBox="0 0 24 24">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                            stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6" />
+                                    </svg>
+
+                                </button>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
             </form>
         </div>
     </section>
