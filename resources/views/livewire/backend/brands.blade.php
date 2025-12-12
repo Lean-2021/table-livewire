@@ -94,8 +94,8 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4">
-                                <img class="w-10 h-10 rounded-full" src="/docs/images/people/profile-picture-1.jpg"
-                                    alt="image">
+                                <img class="w-10 h-10 rounded-full"
+                                    src="{{ asset('storage/' . $brand->images->first()->path) }}" alt="image">
                             </td>
 
                             <td scope="row" class="px-6 py-4 text-gray-900 dark:text-white whitespace-nowrap">

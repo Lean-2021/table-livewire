@@ -15,4 +15,9 @@ class Brand extends Model
         'image',
         'status',
     ];
+
+    public function images()
+    {
+        return $this->morphMany(Image::class, 'imageable');
+    }
 }

@@ -3,6 +3,7 @@
 namespace App\Livewire\Backend;
 
 use App\Models\Brand;
+use Illuminate\Support\Str;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -11,7 +12,7 @@ class BrandsForm extends Component
     use \Livewire\WithFileUploads;
 
     public $name;
-    public $image, $id_marca;
+    public $id_marca;
     public $images = [];
 
     #[Layout("layouts.dashboard")]
@@ -24,7 +25,8 @@ class BrandsForm extends Component
     {
         $this->validate([
             'name' => 'required',
-            'image' => 'nullable|image|max:1024',
+            'images' => 'nullable|array|max:10',
+            'images.*' => 'nullable|image|mimes:png,jpg,svg|max:1024',
         ]);
 
 
@@ -34,19 +36,25 @@ class BrandsForm extends Component
             'status' => 1,
         ];
 
-        if ($this->image) {
-            $data['image'] = $this->image->store('brands', 'public');
-        }
 
-        Brand::updateOrCreate(
+
+        $brand = Brand::updateOrCreate(
             ['id' => $this->id_marca],
             $data
         );
 
+        if ($this->images) {
+            foreach ($this->images as $image) {
+                $name =  Str::uuid()->toString() . '.' . $image->getClientOriginalExtension();
+                $path = $image->storeAs('brands', $name);
+                $brand->images()->create(['path' => $path]);
+            }
+        }
+
 
         $this->id_marca = 0;
         $this->name = '';
-        $this->image = '';
+        $this->images = [];
 
 
         $this->dispatch('flash-message', message: "Marca guardada con éxito");

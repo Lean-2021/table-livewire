@@ -30,6 +30,7 @@
                     <div class="sm:col-span-2">
                         <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                             for="small_size">Imagen</label>
+                        <small class="text-gray-500">(Máximo permitido: 10 imágenes)</small>
 
                         <!-- Profile Photo File Input -->
                         <input type="file" id="images" class="hidden" wire:model="images" multiple />
