@@ -260,49 +260,50 @@
     <script src="https://cdn.jsdelivr.net/npm/flowbite@4.0.1/dist/flowbite.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-           
-
         document.addEventListener('livewire:navigated', () => {
             initFlowbite();
+        });
 
-            try {
-                const raw = localStorage.getItem('flash_message');
-                if (raw) {
-                    const payload = JSON.parse(raw);
-                    const Toast = Swal.mixin({
-                        toast: true,
-                        position: 'top-end',
-                        showConfirmButton: false,
-                        timer: 3000,
-                        timerProgressBar: true,
-                        didOpen: (toast) => {
-                            toast.onmouseenter = Swal.stopTimer;
-                            toast.onmouseleave = Swal.resumeTimer;
-                        }
-                    });
-                    Toast.fire({
-                        icon: 'success',
-                        title: payload.message,
-                        background: '#0D3811',
-                        color: '#FFFFFF'
-                    });
-                    localStorage.removeItem('flash_message');
+        // Listen for standard Livewire events (if still used elsewhere)
+        window.addEventListener('flash-message', event => {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.onmouseenter = Swal.stopTimer;
+                    toast.onmouseleave = Swal.resumeTimer;
                 }
-            } catch (err) {
-                console.error('Error showing flash message:', err);
-            }
-
+            });
+            Toast.fire({
+                icon: event.detail.icon,
+                title: event.detail.title,
+                text: event.detail.message, // Add text if needed
+            });
         });
 
-        window.addEventListener('flash-message', (e) => {
-            try {
-                const detail = e.detail || {};
-                localStorage.setItem('flash_message', JSON.stringify(detail));
-            } catch (err) {
-                console.error('Could not persist flash message', err);
-            }
-        });
-      
+        // Check for Session Flash Messages on load/navigation
+        @if (session()->has('flash'))
+            const flash = @json(session('flash'));
+            const Toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.onmouseenter = Swal.stopTimer;
+                    toast.onmouseleave = Swal.resumeTimer;
+                }
+            });
+            Toast.fire({
+                icon: flash.icon || 'success',
+                title: flash.title || 'Notification',
+                text: flash.message || '',
+            });
+        @endif
     </script>
 
 </body>

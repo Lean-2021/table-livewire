@@ -3,6 +3,7 @@
 namespace App\Livewire\Backend;
 
 use App\Models\Brand;
+use App\Models\Image;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -13,6 +14,9 @@ class Brands extends Component
     public $search = '';
     public $selectedBrands = [];
     public $selectAll = false;
+
+    use WithPagination;
+
 
     //Si tildamos el check del encabezado se seleccionan todos los registros
     public function updatedSelectAll($value)
@@ -32,8 +36,8 @@ class Brands extends Component
         $this->selectAll = false;
     }
 
+    // Method mod removed as it is replaced by direct route navigation in the view
 
-    use WithPagination;
 
     #[On('brandToggled')]
     public function handleBrandToggled(): void {}

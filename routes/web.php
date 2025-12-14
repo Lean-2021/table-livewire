@@ -17,5 +17,5 @@ Route::middleware([
         return view('backend.admin');
     })->name('admin');
     Route::get('/marcas', Brands::class)->name('brands');
-    Route::get('/marcas/formulario', BrandsForm::class)->name('brands-form');
+    Route::get('/marcas/formulario/{id?}', BrandsForm::class)->name('brands-form');
 });
