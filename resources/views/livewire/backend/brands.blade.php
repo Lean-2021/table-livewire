@@ -65,7 +65,7 @@
 
                     </th>
                     @if (count($selectedBrands) > 0)
-                        <button title="Eliminar seleccionados" wire:click="deleteSelectedBrands"
+                        <button title="Eliminar seleccionados" wire:click="$dispatch('confirm-delete')"
                             class="absolute mt-1 z-10 right-1 ms-20 bg-red-700 hover:bg-red-800 p-2 rounded-md">
                             <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
                                 xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"

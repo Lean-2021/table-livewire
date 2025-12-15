@@ -29,6 +29,7 @@ class Brands extends Component
         }
     }
 
+    #[On('delete-selected-brands')]
     public function deleteSelectedBrands()
     {
         Brand::whereIn('id', $this->selectedBrands)->delete();

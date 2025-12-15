@@ -284,6 +284,29 @@
             });
         });
 
+        // Mensaje de advertencia antes de eliminar
+        Livewire.on('confirm-delete', () => {
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Livewire.dispatch('delete-selected-brands');
+                    Swal.fire({
+                        title: "Deleted!",
+                        text: "Your file has been deleted.",
+                        icon: "success"
+                    });
+                }
+            });
+        });
+
+
         // Check for Session Flash Messages on load/navigation
         @if (session()->has('flash'))
             const flash = @json(session('flash'));
