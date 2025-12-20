@@ -6,15 +6,16 @@ use App\Models\Brand;
 use App\Models\Image;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
 use Livewire\Component;
-
-
+use TallStackUi\Traits\Interactions;
 
 class BrandsForm extends Component
 {
     use \Livewire\WithFileUploads;
+    use Interactions;
 
     public $name;
     public $id_marca;
@@ -71,20 +72,47 @@ class BrandsForm extends Component
             }
         }
 
+
+        // Determine message based on edit mode
+        // $message = $this->editMode ? 'Marca actualizada con éxito' : 'Marca guardada con éxito';
+
+        // Dispatch a browser event so it can be persisted in localStorage
+        // and shown after SPA navigation (since session flash doesn't work well with navigate: true)
+        // $this->dispatch('flash-message', [
+        //     'message' => $message,
+        //     'title' => 'Éxito',
+        //     'icon' => 'success',
+        //     'position' => 'top-end',
+        //     'timer' => 3000,
+        // ]);
+
+
+        $this->toast()
+            // ->persistent()
+            ->success($this->editMode ? 'Marca actualizada con éxito' : 'Marca creada con éxito')
+            ->flash()
+            ->send();
+
         $this->reset(['id_marca', 'name', 'images', 'savedImages']);
         $this->editMode = false;
 
+        // $this->dispatch('show-toast');
+        // $this->dispatch('toast', [
+        //     'message' => 'Marca actualizada con éxito',
+        //     'type' => 'success',
+        // ]);
 
-        session()->flash('flash', [
-            'message' => 'Marca guardada con éxito',
-            'title' => 'Éxito',
-            'icon' => 'success',
-            'position' => 'top-end',
-            'timer' => 3000,
-        ]);
+
+
+
+
+
+        // dd('ok');
+
 
         return $this->redirectRoute('brands', navigate: true);
     }
+
 
     // Delete an image from a brand (existing image from DB)
     public function deleteImage($imageId)

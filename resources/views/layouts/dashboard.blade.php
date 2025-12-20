@@ -11,9 +11,12 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf/notyf.min.css">
 
-    @livewireStyles
+
     <!-- Scripts -->
+    <tallstackui:script />
+    @livewireStyles
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script>
         // On page load or when changing themes, best to add inline in `head` to avoid FOUC
@@ -27,6 +30,7 @@
 </head>
 
 <body class="font-sans antialiased">
+
     <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
         {{-- Prueba de layout back --}}
 
@@ -204,6 +208,9 @@
                     </ul>
                 </div>
             </aside>
+            <x-toast />
+            <x-dialog />
+
             <main class="p-4 sm:ml-64 mt-16">
                 {{ $slot }}
             </main>
@@ -255,17 +262,24 @@
         </div>
 
     </div>
+
     @stack('scripts')
     @livewireScripts
     <script src="https://cdn.jsdelivr.net/npm/flowbite@4.0.1/dist/flowbite.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> --}}
+
+
     <script>
         document.addEventListener('livewire:navigated', () => {
             initFlowbite();
+
         });
 
-        // Listen for standard Livewire events (if still used elsewhere)
-        window.addEventListener('flash-message', event => {
+
+
+
+
+        Livewire.on('toast', (data) => {
             const Toast = Swal.mixin({
                 toast: true,
                 position: "top-end",
@@ -278,11 +292,15 @@
                 }
             });
             Toast.fire({
-                icon: event.detail.icon,
-                title: event.detail.title,
-                text: event.detail.message, // Add text if needed
+                icon: data.icon || 'success',
+                title: data.title || 'Notification',
+                text: data.message || 'Hola',
             });
         });
+
+
+
+
 
         // Mensaje de advertencia antes de eliminar
         Livewire.on('confirm-delete', () => {
